@@ -28,8 +28,24 @@ module Syncify
         return FileStore.new conf[:location]
       end
       if(conf[:storage] == "s3")
-        return S3.new 
+        return S3.new  conf[:s3_access_key_id],conf[:s3_secret_access_key],conf[:s3_bucket]
       end
     end
   end
 end
+
+# #SYNCIFY
+# Syncify::Syncify.configure do |config|
+#   config[:source][:storage] = "file"
+#   config[:source][:location] = ""
+
+#   # config[:dest][:storage] = "file"
+#   # config[:dest][:location] = ""
+
+#   config[:dest][:storage] = "s3"
+#   config[:dest][:s3_access_key_id] = ""
+#   config[:dest][:s3_secret_access_key] = ""
+#   config[:dest][:s3_bucket] = ""
+# end
+
+# Syncify::Syncify.sync

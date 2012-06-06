@@ -21,10 +21,11 @@ module Syncify
       actions[:add].each do |to_add|
         begin
           puts "adding #{to_add}"
-          @dest.add to_add,@source.get_path(to_add)
+          @dest.add to_add,@source.get_content(to_add)
           dest_contents[to_add] = source_contents[to_add]
         rescue Exception => e
-          puts "unable to add ."
+          puts e
+          puts "Syncify ->  #{@dest.to_s} -> unable to add."
         end
       end
 
@@ -34,7 +35,8 @@ module Syncify
           @dest.delete to_del  
           dest_contents.delete to_del
         rescue Exception => e
-          puts "unable to del ."
+          puts e
+          puts "Syncify ->  #{@dest.to_s} -> unable to delete."
         end
         
       end
@@ -42,13 +44,21 @@ module Syncify
       actions[:mod].each do |to_mod|
         begin
           puts "modifiying #{to_mod}"
-          @dest.modify to_mod,@source.get_path(to_mod)
-          dest_contents[to_add] = source_contents[:to_add]
+          @dest.modify to_mod,@source.get_content(to_mod)
+          dest_contents[to_mod] = source_contents[to_mod]
         rescue Exception => e
-          puts "unable to mod ."
+          puts e
+          puts "Syncify ->  #{@dest.to_s} -> unable to modify."
         end
       end
-      @dest.write_cache dest_contents
+
+      begin
+        @dest.write_cache dest_contents
+      rescue Exception => e
+        puts e
+        puts "Syncify ->  #{@dest.to_s} -> writing cache failed."        
+        raise
+      end
     end
 
     def find_actions source_contents,dest_contents

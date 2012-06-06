@@ -22,18 +22,20 @@ module Syncify
       all_md5s
     end
 
-    def get_path name
-      @location+name
+    def get_content name
+      IO.read @location+name
     end
 
-    def add name,path
+    def add name,content
       full_path = @location+name
       FileUtils.mkdir_p(File.dirname(full_path))
-      FileUtils.cp(path, full_path)
+      File.open(@location+name, "w") do |f|
+        f.write content
+      end
     end
 
-    def modify name,path
-      add name,path
+    def modify name,content
+      add name,content
     end
 
     def delete name
